@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, memo } from 'react'
 import './App.css'
 import { RecoilRoot, useSetRecoilState, atom, useRecoilValue } from 'recoil'
 import { counterAtom } from './store/atoms/counter'
@@ -9,10 +9,18 @@ function App() {
     <RecoilRoot>
       <Counter />
     </RecoilRoot>
+    //<Counter />
   )
 }
 
 function Counter(){
+    const [count, setCount] = useState(0)
+    
+    useEffect(() => {
+      setInterval(() => {
+        setCount(c => c + 1)
+      }, 3000)
+    }, []);
 
     return <div>
       <CurrentCount />
@@ -20,6 +28,8 @@ function Counter(){
       <Decrease />
     </div>
 }
+
+
 
 function CurrentCount(){
   //this comp has now subscribed to the value of the atom
@@ -30,6 +40,7 @@ function CurrentCount(){
    </div> 
 }
 
+//memoized decrease function
 function Decrease(){
   //this comp is subscribed to the setter
   const setCount = useSetRecoilState(counterAtom)
@@ -43,6 +54,7 @@ function Decrease(){
   </div>
 }
 
+//raw increase function
 function Increase(){
   //this comp is also subscribed to the setter of the atom
   const setCount = useSetRecoilState(counterAtom)
